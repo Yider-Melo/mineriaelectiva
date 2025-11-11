@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MedPredict</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f4f8fb;
+            font-family: 'Poppins', sans-serif;
+        }
+        .sidebar {
+            background-color: #0d6efd;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>🩺 MedPredict</h3>
+        <a href="{% url 'dashboard' %}">📊 Dashboard</a>
+        <a href="{% url 'prediccion' %}">🔍 Predicción</a>
+        <a href="#">👤 Pacientes</a>
+
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <h2 class="mb-4 fw-bold text-primary">Panel de Control</h2>
+
+        <!-- Tarjetas resumen -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6 class="text-muted">Pacientes registrados</h6>
+                    <h3 class="fw-bold">{{ total_pacientes }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6 class="text-muted">Predicciones realizadas</h6>
+                    <h3 class="fw-bold">{{ total_predicciones }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6 class="text-muted">Riesgo alto detectado</h6>
+                    <h3 class="fw-bold text-danger">{{ total_riesgo_alto }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico -->
+        <div class="chart-container mt-4">
+            <h5 class="text-center text-secondary">Distribución de Enfermedades</h5>
+            <canvas id="chartEnfermedades"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('chartEnfermedades');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ enfermedades_labels|safe }},
+                datasets: [{
+                    label: 'Casos detectados',
+                    data: {{ enfermedades_data|safe }},
+                    backgroundColor: ['#0d6efd', '#00b4d8', '#ff6b6b', '#ffd166', '#06d6a0'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
