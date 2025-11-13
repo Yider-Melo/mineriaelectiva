@@ -1,1 +1,1 @@
-web: gunicorn MedPredict.wsgi
+web: gunicorn MedPredict.wsgi:application
