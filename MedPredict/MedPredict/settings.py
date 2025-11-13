@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+import os
 
 from pathlib import Path
 
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8b&bl54l7_q@krl)c3yt^alqx!dj986&4@e-c@u&-v66y#89=q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,12 +78,14 @@ WSGI_APPLICATION = 'MedPredict.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Premedic',    
-        'USER': 'postgres',  
-        'PASSWORD': '000000',
-        'HOST': 'localhost',
+        'NAME': 'postgres',  # Nombre de la base en Supabase (por defecto "postgres")
+        'USER': 'postgres',  # Usuario de Supabase
+        'PASSWORD': 'Dianayamila27',  # Contraseña que usas en Supabase
+        'HOST': 'db.ncfxsoqsnwwduxeknbox.supabase.co',  # Host del proyecto Supabase
         'PORT': '5432',
-
+        'OPTIONS': {
+            'sslmode': 'require',  # Supabase requiere conexión segura
+        },
     }
 }
 
